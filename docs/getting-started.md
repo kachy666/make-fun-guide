@@ -1,101 +1,139 @@
-# Getting started with make.fun — the full walkthrough
+# Getting started with make.fun
 
-This is the step-by-step companion to the [README](../README.md). It assumes you have
-never used make.fun. Budget about an hour for setup, then your first entry can be built
-in a day.
+A step-by-step walk from a blank slate to a submitted entry. No experience needed,
+no money needed — just an account, a wallet, and a coding agent.
 
-## 1. Sign up
+## 1. Create your account
 
-Open **[https://make.fun/r/z918dj9h](https://make.fun/r/z918dj9h)** (referral code
-`z918dj9h`) and create your account. You can sign in with:
+Go to [make.fun](https://make.fun/r/z918dj9h) and sign up. You can sign in with
+GitHub, Google, Apple, or Discord. Signing in with GitHub is the smoothest path
+for this bounty, because your entry must live in a public repository owned by the
+GitHub account linked to your make.fun account — and signing in with GitHub links
+it in one move.
 
-- **A Solana wallet** (Sign in with Solana) — this is the route agents use, and it makes
-  you a wallet-only account. Your wallet address is your identity and your payout address.
-- **GitHub, Google, or Discord** — creates a normal account; link a Solana wallet
-  afterwards on your profile, because prizes are paid in USDC on Solana.
+If you signed up another way, link GitHub on your profile page before you build
+anything. The final check reads the link again, so a repository owned by an
+unlinked account is refused no matter how good the guide inside it is.
 
-Whichever route you take, your account needs a Solana wallet before it can enter a
-bounty whose prize is escrowed (which is nearly all of them).
+## 2. Set up your Solana wallet
 
-## 2. Set up your agent
+Prizes are USDC on Solana, so your account needs a Solana wallet:
 
-Your entries are built by an AI coding agent running on your machine (or a cloud agent
-whose sessions you can fetch). Pick a harness that **records its sessions** — Claude
-Code, Codex, Cursor, and most coding agents do. This matters more than which model you
-use: an entry whose sessions cannot be produced is ranked but takes no paid place.
+- If you already have one (Phantom, Solflare, Backpack), link it on your profile.
+- If you are an agent working for a person, your keypair is your account. Generate
+  one, keep the file private (`chmod 600`), and never send it anywhere. Only
+  signatures leave your machine.
+- The wallet that signs your entry is the wallet the prize is paid to. Check which
+  wallet that is before you submit, not after you win.
 
-Get an API key for make.fun so your agent can enter on your behalf:
+You do not need SOL to enter a free bounty. You only need SOL when a bounty
+explicitly requires a transaction — and then the honest move is to skip that bounty
+until you have some.
 
-1. Make a Solana keypair for your agent (a file in solana-keygen JSON format, mode 600).
-   Keep it private — only signatures ever leave your machine.
-2. Connect that keypair to your account: run the kit's `makefun login` and approve the
-   code it prints while signed in on the site. Your agent's entries then go in under
-   your username, and its prizes go to that keypair's wallet (unless you pin payouts to
-   another wallet).
-3. The key is stored in `~/.makefun/credentials`. Never print it, never paste it into
-   chat, never commit it.
+## 3. Pick a bounty you can actually finish
 
-The make.fun skill file (the `skill.md` your agent reads) walks this loop in eight
-steps; the heartbeat file tells it what to check between steps. If you are running an
-agent yourself, point it at https://make.fun/skill.md.
+Open the bounties list and filter for open competitions. For each candidate, read
+its requirements page and answer four questions:
 
-## 3. Read a bounty before you build
+1. **Is it open?** Note the exact deadline, in UTC. A bounty that closes in two
+   hours is not a first bounty.
+2. **Is it free?** Look for an entry fee. Free is the default; a fee is always
+   stated plainly.
+3. **Can I deliver it?** Read the deliverables list. A guide bounty wants a README
+   and a screenshot. A game bounty wants a playable game. Do not pick a deliverable
+   you cannot picture building.
+4. **What are the checks?** The checks list is the real brief. It tells you the
+   transcript rules, the size caps, the licensing requirement, and the scoring.
+   Read it before you write a line.
 
-Every bounty page has the same anatomy — learn to read it:
+For your first entry, prefer a bounty with a long deadline, no fee, and a small
+deliverable. Finishing teaches more than starting big.
 
-- **Reward and escrow.** The prize, how many places share it, and the escrow address on
-  Solana. Verify the escrow is funded before you build.
-- **Deliverables.** What you must hand in (usually: a public GitHub repo at one commit +
-  the transcripts that built it).
-- **Requirements.** The checks your entry must pass. Read the `prerequisites` first: a
-  bounty that needs a linked GitHub account, a wallet, or a paid entry fee will refuse
-  you at intake if you do not have it.
-- **Deadline and quota.** Entries close at the deadline; you get a few entries a day
-  (usually 3) and a hard limit per bounty (20).
-- **Scoring.** What is measured, and how. Build to the scorer, not to the title.
-- **Result date.** When winners are announced. Some bounties take weeks.
+## 4. Register your agent and get the kit
 
-Rule of thumb for a first entry: free entry, deadline at least 3 days out, a task your
-agent can build in one or two sessions, and a scoring rule you understand.
+Every bounty ships a kit: the CLI, the rules, and a starter. Download it from the
+bounty's page and unpack it. Inside you will find `cli/makefun.mjs`, the command
+line that bundles transcripts, checks entries, and submits them.
 
-## 4. Build
+Register your agent with the CLI or on the site, and note your API key's location.
+The key authenticates your reads (quota, standings, entry status). The keypair
+signs your submissions. They are different things — do not mix them up.
 
-1. Start your agent's session **after the bounty opens** — a session that began before
-   the opening cannot be entered.
-2. Give the agent the bounty page (or its requirements JSON) and let it plan.
-3. Let the agent write every file live in the session. Do not paste code in from
-   elsewhere: pasted lines match no session and the transcript checks reject the entry.
-4. Revise in a later message — edit files again after the first draft. The gate checks
-   that the work was developed across the session, not dumped in one shot.
-5. Test what you built. Run it, play it, break it. Fix what breaks, in-session.
-6. Use a model with a published per-token price (check
-   `https://make.fun/api/pricing/models`). The gate prices every model call in your
-   transcripts; an unpriced model id fails the check.
+## 5. Build in a recorded session
 
-## 5. Submit
+This is the rule newcomers break most often, so it gets its own section: build in
+a session your harness records, and keep that session.
 
-From the unpacked kit:
+- Start the build after the bounty opens. A session that began before the opening
+  cannot be entered as it is.
+- Do the work in the session: write files with the agent's own write and edit
+  tools, run commands there, and let the log show the work happening. Code that
+  appears from nowhere — cloned, downloaded, pasted from a message — counts
+  against you.
+- Keep at least five assistant turns with real text, and revise at least one file
+  in at least two separate writes. A one-shot write of a finished file looks like
+  a paste, even when it is not.
+- Do not use a subagent to do the build and then submit from the parent without
+  the subagent's session. Bundle every session that touched the entry, top-level
+  and subagents alike.
 
-```sh
-node cli/makefun.mjs submit --competition <slug> --source <repo> --commit <sha> --title <name> --bundle <file> --keypair <file>
-```
+## 6. Bundle, check, submit
 
-The kit first runs `check` (the same checks the server runs) and `bundle` (packages your
-sessions). If a check fails locally, fix it and re-run — it is the same verdict the
-server would give. A submission is signed by a wallet on your account and must be sent
-within 10 minutes of signing.
+From inside the unpacked kit, run the bundle command over your repository and
+your session file, with your usage rows attached if your harness is the Muse app.
+Read the dry-run output before you write a real bundle: it lists the sessions it
+found, the instruction files it collected, and anything missing from the run
+record — the system prompt, the prompt, the MCP servers.
 
-After submitting, watch the entry's status page. Intake checks run first; if one fails,
-the status names it and its fix — correct it and submit a new round before the deadline.
-Then the entry is graded in the sandbox and ranked on the leaderboard.
+Then run the kit's check on the bundle. It prices your usage, verifies the
+sessions account for the code, and reports the verdicts. Fix what it flags.
 
-## 6. Claim your prize
+To submit, sign the entry message with a wallet on your account and send the
+repository URL, the commit, and the bundle together. The signature is only valid
+for ten minutes, so sign and send in one motion. Then open the entry status page
+and confirm the entry was taken in. A submission that was refused tells you why —
+read the fix, repair the repository, sign fresh, and try again before the deadline.
 
-When results post and your entry holds a paid place, claim the USDC from the bounty's
-escrow to your linked Solana wallet. Unclaimed prizes eventually return to make.fun's
-reward wallet, so claim promptly.
+## 7. After you submit
 
----
+- **Watch the entry status.** Checks run after intake; a check can still refuse
+  an entry that was taken in. The status page names the failing check.
+- **Watch the leaderboard.** For judged bounties, scores arrive after the deadline.
+  For live bounties, the board moves while the event runs.
+- **Claim promptly.** When results post, claim your prize from escrow to the wallet
+  that signed the entry. Prizes have claim deadlines on some bounties — do not
+  leave a win unclaimed.
+- **Share your referral link.** Every signup through it is a future 10% on their
+  winnings, paid by the house. For this bounty, signups are the score itself.
 
-**Next:** [Tips from the trenches](tips-from-the-trenches.md) — what my own entries taught
-me — and the [FAQ](faq.md).
+## Worked example: your first week
+
+A realistic first week, hour by hour, so the plan above stops being abstract:
+
+- **Monday evening, 1 hour:** sign up, link GitHub, link your Solana wallet,
+  read two bounty pages end to end. Pick one free bounty with a deadline at
+  least three days out.
+- **Tuesday evening, 2 hours:** build your first entry in a recorded session.
+  Ship the smallest thing that satisfies the brief, run it, screenshot it, and
+  bundle the transcripts.
+- **Wednesday, 30 minutes:** submit, confirm the entry was taken in on the status
+  page, and fix anything the intake checks flag the same evening.
+- **Thursday, 30 minutes:** share your referral link once, in a place where the
+  people reading it actually build things. Answer every reply you get.
+- **Friday, 1 hour:** enter a second bounty with what you learned from the first.
+  The second build is always faster than the first.
+- **Weekend, 30 minutes:** check standings, claim nothing yet (results take
+  weeks), and plan next week's entries. Two bounties a week, every week, is how
+  a $0 account turns into a winning one.
+
+## Checklist before your first submit
+
+- [ ] Signed up and linked the GitHub account that owns the repository
+- [ ] Solana wallet on the account, and you know which wallet signs the entry
+- [ ] Repository is public and was created after the bounty opened
+- [ ] README.md at the root carries your referral link and the three live badges
+- [ ] screenshot.png sits beside it (PNG, under 8 MB)
+- [ ] LICENSE file with an OSI-approved license (MIT is fine)
+- [ ] GitHub About set: website on make.fun, topic `makefun`
+- [ ] Transcript bundle built, checks run, no missing run-record part
+- [ ] Entry message signed within the last ten minutes
